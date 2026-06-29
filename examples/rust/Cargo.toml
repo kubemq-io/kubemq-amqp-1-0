@@ -1,0 +1,39 @@
+[workspace]
+resolver = "2"
+# One member crate per variant. The glob `<group>/<variant>` auto-includes every
+# directory that contains a Cargo.toml, so the 13 variants below are picked up
+# without editing this file as each crate dir lands. The 13 variants (master
+# table in ../SHARED-CONVENTIONS.md):
+#   1  queues/basic-send-receive
+#   2  queues/ack-release-redelivery
+#   3  queues/settlement-modes
+#   4  events/basic-pubsub
+#   5  events/consumer-group
+#   6  events/selector
+#   7  events-store/durable-replay
+#   8  events-store/start-positions
+#   9  commands/request-reply-dynamic-node
+#   10 queries/request-reply
+#   11 advanced/multi-frame-large-payload
+#   12 advanced/anonymous-terminus
+#   13 connectivity/auth
+members = ["*/*"]
+# The members glob `*/*` would otherwise try to treat `target/<profile>` as a
+# member crate once a build has run; exclude the build output explicitly.
+exclude = ["target"]
+
+[workspace.package]
+edition = "2021"
+version = "0.1.0"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+# Native AMQP 1.0 client. fe2o3-amqp is pre-1.0 and its API (especially the
+# FilterSet / settlement surfaces) churns across minor versions, so every
+# coordinate is pinned EXACT and dial-tested against the live KubeMQ AMQP 1.0
+# connector before being committed.
+fe2o3-amqp = { version = "=0.15.1", features = ["rustls"] }
+fe2o3-amqp-types = "=0.14.0"
+serde_amqp = "=0.14.1"
+tokio = { version = "=1.52.3", features = ["full"] }
+crc32fast = "=1.5.0"

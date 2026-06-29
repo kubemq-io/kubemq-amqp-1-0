@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Variant #7 — events-store/durable-replay.
+    Target framework, OutputType=Exe and the AMQPNetLite.Core package reference
+    are injected by examples/csharp/Directory.Build.props (+ pinned version from
+    Directory.Packages.props). This file is intentionally minimal.
+  -->
+</Project>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.kubemq.examples.amqp10</groupId>
+  <artifactId>kubemq-amqp-1-0-examples</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+
+  <name>KubeMQ AMQP 1.0 — Java Examples</name>
+  <description>
+    Native AMQP 1.0 client examples driving the embedded KubeMQ AMQP 1.0 connector
+    with Apache Qpid JMS (javax.jms API) — NO KubeMQ SDK.
+  </description>
+
+  <!--
+    Only BUILDABLE modules are listed here. The coverage matrix has 13 variants;
+    THREE are documented N/A cells for Java (folder + README only, NO pom / NO code):
+      * #5  events/consumer-group — the connector advertises no SHARED-SUBS
+            capability (so Qpid JMS createShared(Durable)Consumer throws "Remote
+            peer does not support shared subscriptions"), AND Qpid JMS exposes no
+            API to set the connector's x-opt-kubemq-group link property — so there
+            is no Qpid-JMS path to consumer groups. See events/consumer-group/README.md.
+      * #8  events-store/start-positions — Qpid JMS exposes no API for arbitrary
+            link properties (x-opt-kubemq-start), so it cannot drive the start-
+            position grammar. See events-store/start-positions/README.md.
+      * #12 advanced/anonymous-terminus — the connector advertises no
+            ANONYMOUS-RELAY capability, so Qpid JMS falls back to per-destination
+            sender links. See advanced/anonymous-terminus/README.md.
+    The 10 runnable variants are #1-#4, #6, #7, #9-#11, #13.
+  -->
+  <modules>
+    <module>queues/basic-send-receive</module>
+    <module>queues/ack-release-redelivery</module>
+    <module>queues/settlement-modes</module>
+    <module>events/basic-pubsub</module>
+    <module>events/selector</module>
+    <module>events-store/durable-replay</module>
+    <module>commands/request-reply-dynamic-node</module>
+    <module>queries/request-reply</module>
+    <module>advanced/multi-frame-large-payload</module>
+    <module>connectivity/auth</module>
+  </modules>
+
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!--
+      Apache Qpid JMS 1.x is the javax.jms line (it depends on
+      jakarta.jms-api 2.0.3, whose package namespace is still javax.jms — the
+      Jakarta EE 8 spec retained javax.*). The 2.x line moved to the jakarta.jms
+      PACKAGE (jakarta.jms-api 3.x), which is NOT what this repo's deep-compat /
+      ActiveMQ-migration target wants. 1.16.0 is the latest javax.jms release and
+      ships the full JMS 2.0 API (shared/durable consumers, selectors).
+      Bump-and-lock via /check-deps against a live broker.
+    -->
+    <qpid.jms.version>1.16.0</qpid.jms.version>
+    <exec.plugin.version>3.5.0</exec.plugin.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.qpid</groupId>
+        <artifactId>qpid-jms-client</artifactId>
+        <version>${qpid.jms.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${exec.plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

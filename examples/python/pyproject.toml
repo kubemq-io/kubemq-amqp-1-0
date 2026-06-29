@@ -1,0 +1,25 @@
+[project]
+name = "kubemq-amqp-1-0-examples"
+version = "0.1.0"
+description = "KubeMQ embedded AMQP 1.0 connector examples in Python (native python-qpid-proton blocking client)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "python-qpid-proton==0.40.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.6.0",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ANN", "BLE"]
+# Examples embed verbatim broker-output transcripts (in docstrings and trailing
+# comment blocks) that are intentionally faithful to the real output and may run
+# wide; E501 is not meaningful for those documentation lines.
+ignore = ["E501"]

@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>settlement-modes</AssemblyName>
+    <RootNamespace>KubeMQ.Amqp10.Examples.Queues.SettlementModes</RootNamespace>
+  </PropertyGroup>
+</Project>

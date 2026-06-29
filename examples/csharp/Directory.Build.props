@@ -1,0 +1,22 @@
+<Project>
+  <!--
+    Shared MSBuild props for all KubeMQ AMQP 1.0 C# example projects.
+    Every variant lives in <group>/<variant>/ with its own .csproj and inherits:
+      - the target framework + language settings below, and
+      - the pinned AMQPNetLite.Core version from Directory.Packages.props
+        (Central Package Management — no inline Version on the reference).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <OutputType>Exe</OutputType>
+    <!-- examples are not shipped — silence the "no XML doc" / packaging noise -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AMQPNetLite.Core" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>ack-release-redelivery</AssemblyName>
+    <RootNamespace>KubeMQ.Amqp10.Examples.Queues.AckReleaseRedelivery</RootNamespace>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Variant #8 — events-store/start-positions.
+    Framework / Exe / AMQPNetLite.Core injected by Directory.Build.props
+    (+ pinned version from Directory.Packages.props).
+  -->
+</Project>

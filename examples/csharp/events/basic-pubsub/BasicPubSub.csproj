@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>basic-pubsub</AssemblyName>
+    <RootNamespace>KubeMQ.Amqp10.Examples.Events.BasicPubSub</RootNamespace>
+  </PropertyGroup>
+</Project>

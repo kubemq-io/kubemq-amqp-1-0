@@ -1,0 +1,15 @@
+[package]
+name = "basic-send-receive"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+publish = false
+
+[[bin]]
+name = "basic-send-receive"
+path = "src/main.rs"
+
+[dependencies]
+fe2o3-amqp.workspace = true
+fe2o3-amqp-types.workspace = true
+tokio.workspace = true

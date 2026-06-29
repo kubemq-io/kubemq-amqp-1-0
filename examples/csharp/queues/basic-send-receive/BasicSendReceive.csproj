@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>basic-send-receive</AssemblyName>
+    <RootNamespace>KubeMQ.Amqp10.Examples.Queues.BasicSendReceive</RootNamespace>
+  </PropertyGroup>
+</Project>

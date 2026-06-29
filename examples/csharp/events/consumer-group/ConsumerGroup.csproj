@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>consumer-group</AssemblyName>
+    <RootNamespace>KubeMQ.Amqp10.Examples.Events.ConsumerGroup</RootNamespace>
+  </PropertyGroup>
+</Project>

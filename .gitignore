@@ -1,0 +1,70 @@
+# ── Go ──────────────────────────────────────────
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Code coverage profiles and other test artifacts
+*.out
+coverage.*
+*.coverprofile
+profile.cov
+
+# Go workspace file
+go.work
+go.work.sum
+
+# ── Python ──────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.ruff_cache/
+.venv/
+venv/
+
+# ── Java (Maven) ────────────────────────────────
+target/
+*.class
+*.jar
+*.war
+
+# ── C# / .NET ──────────────────────────────────
+bin/
+obj/
+
+# ── JavaScript / TypeScript ─────────────────────
+node_modules/
+dist/
+
+# ── Rust ────────────────────────────────────────
+# Keep Cargo.lock (examples ship a locked dependency set)
+**/rust/target/
+target/
+
+# ── Env ─────────────────────────────────────────
+.env
+.env.*
+
+# ── Working / scratch ───────────────────────────
+.work/
+
+# ── Burn-in harness logs ────────────────────────
+.work/test-harness/logs/*.log
+
+# ── Editor / IDE ────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ── OS ──────────────────────────────────────────
+.DS_Store
+Thumbs.db

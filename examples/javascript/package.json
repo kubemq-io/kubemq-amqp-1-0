@@ -1,0 +1,20 @@
+{
+  "name": "kubemq-amqp-1-0-examples-js",
+  "version": "0.1.0",
+  "private": true,
+  "description": "KubeMQ AMQP 1.0 connector examples in Node.js/TypeScript (native rhea / rhea-promise client; NO KubeMQ SDK)",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "_note": "Run a single example with: npx tsx <group>/<variant>/index.ts (e.g. npx tsx queues/basic-send-receive/index.ts)"
+  },
+  "dependencies": {
+    "rhea": "3.0.4",
+    "rhea-promise": "3.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}
