@@ -1,0 +1,137 @@
+# KubeMQ AMQP 1.0 burn-in harness configuration (spec §9.3/§9.5).
+# Broker var override: KUBEMQ_BROKER_ADDRESS (default localhost:5672); the
+# harness dials amqp://{address} (SASL ANONYMOUS by default). Link node naming:
+#   <pattern>/amqp10.burnin.{worker}.{idx:04d}
+#   e.g. queues/amqp10.burnin.queues.0001, events/amqp10.burnin.events.0001
+#
+# All six workers drive real traffic: queues + events (produce/consume + fan-out),
+# events_store (durable replay/resume + stalled-credit gate), commands + queries
+# (native AMQP RPC), and credit_flow (manual-credit IssueCredit/DrainCredit).
+
+version: "2"
+
+broker:
+  address: "localhost:5672"        # overridden by KUBEMQ_BROKER_ADDRESS
+  client_id_prefix: "burnin-amqp10"
+
+mode: "soak"
+duration: "1h"
+run_id: ""
+warmup_duration: ""
+
+# AMQP 1.0 knob block (spec §9.3).
+amqp10:
+  settle_mode: "unsettled"         # unsettled (at-least-once) | settled (at-most-once) — per-worker override
+  credit: 100                      # standing link credit a consumer grants (<= MaxUnsettledPerLink=1024)
+  drain: false                     # FLOW{drain=true} to exhaust then stop (credit_flow worker)
+  get_batch_size: 32               # informational (server caps queue Get at min(credit, GetBatchSize, MaxUnsettledPerLink-unsettled))
+  rpc_timeout_ms: 5000             # request header.ttl; server clamps to [1s, DefaultRpcTimeoutSeconds*10]
+  durable: true                    # events_store: SourceExpiryPolicy=ExpiryPolicyNever
+  start_position: "new-only"       # events_store: x-opt-kubemq-start (new-only|first|last|sequence:N|time:T|time-delta:S)
+  selector: ""                     # optional events/events_store source filter (apache.org:selector-filter:string)
+  auth:
+    enabled: false                 # set true + username + JWT-in-password for SASL PLAIN
+    username: ""
+    password: ""
+  tls:
+    enabled: false                 # set true + ca_file/cert_file/key_file for amqps://...:5671/
+    ca_file: ""
+    cert_file: ""
+    key_file: ""
+    server_name: ""
+    skip_verify: false
+
+# Six AMQP 1.0 workers (spec §9.2).
+workers:
+  queues:                          # (1) produce/consume/accept, at-least-once
+    enabled: true
+    channels: 1
+    producers_per_channel: 1
+    consumers_per_channel: 2
+    rate: 100
+  events:                          # (2) fan-out fidelity + continuous-credit hygiene
+    enabled: true
+    channels: 1
+    producers_per_channel: 1
+    subscribers: 2
+    rate: 50
+  events_store:                    # (3) durable replay/resume + stalled-credit gate
+    enabled: true
+    channels: 1
+    producers_per_channel: 1
+    consumers_per_channel: 1
+    rate: 50
+  commands:                        # (4) native AMQP RPC round-trip, executed/error
+    enabled: true
+    channels: 1
+    senders_per_channel: 1
+    responders_per_channel: 1
+    rate: 30
+  queries:                         # (5) native AMQP RPC, reply body+metadata only
+    enabled: true
+    channels: 1
+    senders_per_channel: 1
+    responders_per_channel: 1
+    rate: 30
+  credit_flow:                     # (6) manual-credit receiver, exact-credit delivery
+    enabled: true
+    channels: 1
+    producers_per_channel: 1
+    consumers_per_channel: 1
+    rate: 50
+
+rpc:
+  timeout_ms: 5000
+
+message:
+  size_mode: "fixed"               # fixed | distribution
+  size_bytes: 1024
+  size_distribution: "256:80,4096:15,65536:5"
+  reorder_window: 10000
+
+metrics:
+  port: 8896
+  report_interval: "30s"
+
+logging:
+  format: "text"
+  level: "info"
+
+forced_disconnect:
+  interval: "0"                    # "0" disables; e.g. "60s" to inject churn
+  duration: "5s"
+
+recovery:
+  reconnect_interval: "1s"
+  reconnect_max_interval: "30s"
+  reconnect_multiplier: 2.0
+
+shutdown:
+  drain_timeout_seconds: 10
+
+output:
+  report_file: ""
+  sdk_version: ""
+
+# Pass/fail thresholds (spec §9.4) — AMQP 1.0 retune.
+thresholds:
+  max_loss_pct: 0.0                # queues is at-least-once: no loss
+  max_events_loss_pct: 5.0         # events is at-most-once; events worker also asserts events_dropped_no_credit_total == 0
+  max_duplication_pct: 0.1
+  max_p50_latency_ms: 500
+  max_p95_latency_ms: 1500
+  max_p99_latency_ms: 2000
+  max_p999_latency_ms: 10000
+  min_throughput_pct: 80
+  max_error_rate_pct: 1.0
+  max_memory_growth_factor: 2.0
+  max_downtime_pct: 10
+  max_amqp10_fidelity_failures: 0  # no CRC mismatch / unexplained gap / over-tolerance dup
+  max_duration: "168h"
+
+warmup:
+  max_parallel_channels: 10
+  timeout_per_channel_ms: 5000
+
+cors:
+  origins: "*"
