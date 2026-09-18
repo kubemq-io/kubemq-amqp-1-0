@@ -29,7 +29,7 @@ docker run -d \
   -p 5672:5672 \
   -p 5671:5671 \
   -p 50000:50000 \
-  kubemq/kubemq
+  europe-docker.pkg.dev/kubemq/images/kubemq-next:latest
 ```
 
 > The connector is on by default; set `CONNECTORS_AMQP10_ENABLE=false` to disable it.
