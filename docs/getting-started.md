@@ -12,7 +12,7 @@ boot-the-server step in this repo; point your client at an existing broker.
 Bring up a broker any way you already run KubeMQ. For a throwaway local one:
 
 ```bash
-docker run -d -p 5672:5672 -p 50000:50000 kubemq/kubemq
+docker run -d -p 5672:5672 -p 50000:50000 europe-docker.pkg.dev/kubemq/images/kubemq-next:latest
 ```
 
 > The connector is on by default. Set `CONNECTORS_AMQP10_ENABLE=false` to turn
